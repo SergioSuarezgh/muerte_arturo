@@ -1,0 +1,4 @@
+Versión: 1.0.1
+Fecha: Sun Mar 30 19:30:46 UTC 2025
+Archivos modificados:
+Jenkinsfile
