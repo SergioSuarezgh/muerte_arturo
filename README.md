@@ -1,3 +1,3 @@
 # muerte_arturo
 
-version 1.0.0
+Versión: 1.0.0
