@@ -1,4 +1,4 @@
-e_arturopipeline {
+pipeline {
     agent any
 
     environment {
