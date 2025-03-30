@@ -1,4 +1,4 @@
-pipeline {
+e_arturopipeline {
     agent any
 
     environment {
@@ -51,7 +51,7 @@ pipeline {
 
         stage('Commit y push de cambios') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'github-token', usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_TOKEN')]) {
+                withCredentials([usernamePassword(credentialsId: 'muerte_arturo', usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_TOKEN')]) {
                     sh '''
                         git config user.name "Jenkins CI"
                         git config user.email "jenkins@example.com"
