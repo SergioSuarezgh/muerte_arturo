@@ -51,7 +51,7 @@ pipeline {
 
         stage('Commit y push de cambios') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'github-token', usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_TOKEN')]) {
+                withCredentials([usernamePassword(credentialsId: 'muerte_arturo', usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_TOKEN')]) {
                     script {
                         def remoteUrl = "https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/SergioSuarezgh/muerte_arturo.git"
                         sh """
