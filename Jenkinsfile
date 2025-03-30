@@ -38,14 +38,21 @@ pipeline {
 
         stage('Actualizar archivos') {
             steps {
-                sh '''
-                    sed -i "s/[Vv]ers[ií]?[óo]?[n]?[: ]*$OLD_VERSION/Versión: $NEW_VERSION/" README.md
-                    git diff --name-only HEAD~1 HEAD > cambios.txt || touch cambios.txt
-                    echo "Versión: $NEW_VERSION" > version_log.txt
-                    echo "Fecha: $(date)" >> version_log.txt
-                    echo "Archivos modificados:" >> version_log.txt
-                    cat cambios.txt >> version_log.txt
-                '''
+                script {
+                    // Actualizar README.md con la nueva versión
+                    def readme = readFile('README.md')
+                    def updated = readme.replaceFirst(env.OLD_VERSION, env.NEW_VERSION)
+                    writeFile file: 'README.md', text: updated
+        
+                    // Obtener archivos modificados
+                    sh '''
+                        git diff --name-only HEAD~1 HEAD > cambios.txt || touch cambios.txt
+                        echo "Versión: $NEW_VERSION" > version_log.txt
+                        echo "Fecha: $(date)" >> version_log.txt
+                        echo "Archivos modificados:" >> version_log.txt
+                        cat cambios.txt >> version_log.txt
+                    '''
+                }
             }
         }
 
