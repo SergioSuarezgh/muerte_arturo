@@ -51,18 +51,14 @@ pipeline {
 
         stage('Commit y push de cambios') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'muerte_arturo', usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_TOKEN')]) {
-                    script {
-                        def remoteUrl = "https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/SergioSuarezgh/muerte_arturo.git"
-                        sh """
-                            git config user.name "Jenkins CI"
-                            git config user.email "jenkins@example.com"
-                            git remote set-url origin ${remoteUrl}
-                            git add README.md version_log.txt || true
-                            git commit -m "🚀 Versión \$NEW_VERSION generada automáticamente" || echo "Nada que commitear"
-                            git push origin \$BRANCH
-                        """
-                    }
+                withCredentials([usernamePassword(credentialsId: 'github-token', usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_TOKEN')]) {
+                    sh '''
+                        git config user.name "Jenkins CI"
+                        git config user.email "jenkins@example.com"
+                        git add README.md version_log.txt || true
+                        git commit -m "🚀 Versión $NEW_VERSION generada automáticamente" || echo "Nada que commitear"
+                        git push https://$GITHUB_USER:$GITHUB_TOKEN@github.com/SergioSuarezgh/muerte_arturo.git $BRANCH
+                    '''
                 }
             }
         }
