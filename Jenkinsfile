@@ -57,7 +57,7 @@ pipeline {
                         git config user.email "jenkins@example.com"
                         git add README.md version_log.txt || true
                         git commit -m "🚀 Versión $NEW_VERSION generada automáticamente" || echo "Nada que commitear"
-                        git push https://$GITHUB_USER:$GITHUB_TOKEN@github.com/SergioSuarezgh/muerte_arturo.git $BRANCH
+                        git push https://$GITHUB_USER:$GITHUB_TOKEN@github.com/SergioSuarezgh/muerte_arturo.git HEAD:main
                     '''
                 }
             }
