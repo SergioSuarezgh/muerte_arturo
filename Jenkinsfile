@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         BRANCH = 'main'
-        REPO_URL = 'https://github.com/<usuario>/<repositorio>.git'  // Reemplaza con tu repo
+        REPO_URL = 'https://github.com/SergioSuarezgh/muerte_arturo.git'  // Reemplaza con tu repo
     }
 
     stages {
