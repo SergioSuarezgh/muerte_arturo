@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         BRANCH = 'main'
-        REPO_URL = 'https://github.com/SergioSuarezgh/muerte_arturo.git'  // Reemplaza con tu repo
+        REPO_URL = 'https://github.com/SergioSuarezgh/muerte_arturo.git'
     }
 
     stages {
@@ -13,7 +13,7 @@ pipeline {
                     branches: [[name: "*/${env.BRANCH}"]],
                     userRemoteConfigs: [[
                         url: "${env.REPO_URL}",
-                        credentialsId: 'github-token' // ID de la credencial guardada en Jenkins
+                        credentialsId: 'github-token'
                     ]]
                 ])
             }
@@ -23,7 +23,7 @@ pipeline {
             steps {
                 script {
                     def readme = readFile('README.md')
-                    def matcher = readme =~ /Versión:\s*(\d+\.\d+\.\d+)/
+                    def matcher = readme =~ /[Vv]ers[ií]?[óo]?[n]?[:\s]*([0-9]+\.[0-9]+\.[0-9]+)/
                     if (!matcher) {
                         error "No se encontró la versión en README.md"
                     }
@@ -38,18 +38,9 @@ pipeline {
 
         stage('Actualizar archivos') {
             steps {
-                // Actualizar README.md con la nueva versión
                 sh '''
-                    sed -i "s/Versión: $OLD_VERSION/Versión: $NEW_VERSION/" README.md
-                '''
-
-                // Obtener los archivos modificados desde el último commit
-                sh '''
+                    sed -i "s/[Vv]ers[ií]?[óo]?[n]?[: ]*$OLD_VERSION/Versión: $NEW_VERSION/" README.md
                     git diff --name-only HEAD~1 HEAD > cambios.txt || touch cambios.txt
-                '''
-
-                // Crear archivo de log de versión
-                sh '''
                     echo "Versión: $NEW_VERSION" > version_log.txt
                     echo "Fecha: $(date)" >> version_log.txt
                     echo "Archivos modificados:" >> version_log.txt
@@ -60,13 +51,16 @@ pipeline {
 
         stage('Commit y push de cambios') {
             steps {
-                sh '''
-                    git config user.name "Jenkins CI"
-                    git config user.email "jenkins@example.com"
-                    git add README.md version_log.txt
-                    git commit -m "🚀 Versión $NEW_VERSION generada automáticamente" || echo "Nada que commitear"
-                    git push origin $BRANCH
-                '''
+                withCredentials([usernamePassword(credentialsId: 'github-token', usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_TOKEN')]) {
+                    sh '''
+                        git config user.name "Jenkins CI"
+                        git config user.email "jenkins@example.com"
+                        git remote set-url origin https://$GITHUB_USER:$GITHUB_TOKEN@github.com/SergioSuarezgh/muerte_arturo.git
+                        git add README.md version_log.txt || true
+                        git commit -m "🚀 Versión $NEW_VERSION generada automáticamente" || echo "Nada que commitear"
+                        git push origin $BRANCH
+                    '''
+                }
             }
         }
     }
